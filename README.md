@@ -1,8 +1,11 @@
-# k8s-elector
+# WATTIQ FORK:  k8s-elector
 k8s-elector is a minimal Kubernetes-native sidecar elector service, allowing you to
 perform simple leader election within your Kubernetes deployment. 
 
 Internally, it uses `"k8s.io/client-go/tools/leaderelection"` to run the election.
+
+WattIQ has forked this repository in order to keep the dependencies up to date, and build our own containers in our CI/CD system.  Otherwise there should be minimal changes.
+
 
 ## Usage
 The k8s-elector is intended to be run as a sidecar to other services to provide
