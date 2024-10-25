@@ -1,0 +1,39 @@
+version: '1.0'
+steps:
+  determine_reponame:
+    title: Determining the repository name
+    image: codefresh/kube-helm:master
+    commands:
+      - cf_export REPONAME=$(./scripts/infer_reponame.sh -a ${{CF_COMMIT_AUTHOR}} -b ${{CF_BRANCH}})
+  build_image:
+    title: Building Docker Image
+    type: build
+    image_name: ${{REPONAME}}/k8s-elector
+    registry: ibis-ecr-registry
+    disable_push: true
+    working_directory: .
+    dockerfile: ./Dockerfile
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+  push_to_ecr:
+    title: Pushing image to ECR
+    type: push
+    description: Push tagged image to WattIQ ECR repository
+    candidate: ${{build_image}}
+    tags:
+      - ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+      - ${{CF_SHORT_REVISION}}
+    registry: ibis-ecr-registry
+  push_release_to_ecr:
+    title: Pushing release image to ECR
+    type: push
+    description: Push release image to WattIQ ECR repository
+    candidate: ${{build_image}}
+    tags:
+      - ${{CF_RELEASE_NAME}}
+      - ${{CF_RELEASE_TAG}}
+    registry: ibis-ecr-registry
+    when:
+      condition:
+        all:
+          hasReleaseTag: 'match("${{CF_RELEASE_TAG}}", "^v[0-9]+\.[0-9]+\.[0-9]+$", true)'
+
