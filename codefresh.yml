@@ -17,6 +17,7 @@ steps:
       - cf_export GO_VERSION=$(go version | awk '{ print $3 }')
       - cf_export BUILD_DATE=$(date -u +%Y-%m-%dT%T 2> /dev/null)
       - cf_export VERSION=$(cat VERSION)
+      - cf_export IMAGE_TAG='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
   build_image:
     title: Building Docker Image
     type: build
@@ -31,15 +32,14 @@ steps:
       - VERSION=${{VERSION}}
       - GIT_COMMIT=${{GIT_COMMIT}}
       - GIT_BRANCH=${{CF_BRANCH_TAG_NORMALIZED}}
-    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+    tag: ${{IMAGE_TAG}}
   push_to_ecr:
     title: Pushing image to ECR
     type: push
     description: Push tagged image to WattIQ ECR repository
     candidate: ${{build_image}}
     tags:
-      - ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - ${{CF_SHORT_REVISION}}
+      - ${{IMAGE_TAG}}
     registry: ibis-ecr-registry
   push_release_to_ecr:
     title: Pushing release image to ECR
