@@ -10,6 +10,17 @@ steps:
     image: codefresh/kube-helm:master
     commands:
       - cf_export REPONAME=$(./scripts/infer_reponame.sh -a ${{CF_COMMIT_AUTHOR}} -b ${{CF_BRANCH}})
+      - cf_export IMAGE_TAG='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+  determine_reponame_release:
+    title: Conditionally determining repository name when triggered by a tagged release
+    image: codefresh/kube-helm:master
+    commands:
+      - cf_export REPONAME="production/k8s-elector"
+      - cf_export IMAGE_TAG='${{CF_RELEASE_TAG}}'
+    when:
+      condition:
+        all:
+          whenVarExists: 'includes("${{CF_RELEASE_TAG}}", "{{CF_RELEASE_TAG}}") == false'
   setup_build_vars:
     title: Setting up build variables 
     image: golang:1.22-alpine
@@ -17,7 +28,6 @@ steps:
       - cf_export GO_VERSION=$(go version | awk '{ print $3 }')
       - cf_export BUILD_DATE=$(date -u +%Y-%m-%dT%T 2> /dev/null)
       - cf_export VERSION=$(cat VERSION)
-      - cf_export IMAGE_TAG='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
   build_image:
     title: Building Docker Image
     type: build
