@@ -32,7 +32,7 @@ var (
 	Version   string
 	BuildDate string
 	Commit    string
-	Tag       string
+	Branch    string
 	GoVersion string
 	Arch      = runtime.GOARCH
 	OS        = runtime.GOOS
@@ -62,7 +62,7 @@ func logVersion() {
 	klog.Info("k8s-elector")
 	klog.Infof("  version    : %s", Version)
 	klog.Infof("  commit     : %s", Commit)
-	klog.Infof("  tag        : %s", Tag)
+	klog.Infof("  branch     : %s", Branch)
 	klog.Infof("  go version : %s", GoVersion)
 	klog.Infof("  build date : %s", BuildDate)
 	klog.Infof("  os         : %s", Arch)

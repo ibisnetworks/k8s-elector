@@ -1,21 +1,37 @@
-# k8s-elector
-# Copyright (c) 2019 Vapor IO
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# Base build image
+FROM golang:1.22-alpine as builder
+
+RUN apk update && apk add git
+WORKDIR /app 
+
+# Pass in the version number on the Docker command line:
+# docker build -t foo/bar --build-arg VERSION=1.2.3
+# or default to "0.0.0"
+ARG VERSION=0.0.0
+ARG GO_VERSION=0.0.0
+ARG GIT_COMMIT=""
+ARG GIT_BRANCH=""
+ARG BUILD_DATE=""
+ENV VERSION=${VERSION}
+ENV GO_VERSION=${GO_VERSION}
+ENV GIT_COMMIT=${GIT_COMMIT}
+ENV GIT_BRANCH=${GIT_BRANCH}
+ENV BUILD_DATE=${BUILD_DATE}
+
+# Module cache and dependencies
+COPY go.mod go.sum ./
+RUN go mod download 
+
+# Here we copy the rest of the source code
+COPY . ./
+
+# And compile the project
+ENV CGO_ENABLED=0
+ENV GOOS=linux
+RUN go build -a -installsuffix cgo -ldflags "-w -X main.Version=${VERSION} -X main.BuildDate=${BUILD_DATE} -X main.GoVersion=${GO_VERSION} -X main.Commit=${GIT_COMMIT} -X main.Branch=${GIT_BRANCH}" -o /app/elector cmd/elector.go
 
 FROM scratch
+WORKDIR /app
+COPY --from=builder /app/elector /app/elector 
 
-COPY elector .
-
-ENTRYPOINT ["./elector"]
+CMD ["/app/elector"]
