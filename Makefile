@@ -3,18 +3,18 @@
 #
 
 BIN_NAME    := elector
-BIN_VERSION := 1.2.0.1
+BIN_VERSION := $(shell cat VERSION)
 IMAGE_NAME  := vaporio/k8s-elector
 
 GIT_COMMIT  ?= $(shell git rev-parse --short HEAD 2> /dev/null || true)
-GIT_TAG     ?= $(shell git describe --tags 2> /dev/null || true)
+GIT_BRANCH     ?= $(shell git rev-parse --abbrev-ref HEAD || true)
 BUILD_DATE  := $(shell date -u +%Y-%m-%dT%T 2> /dev/null)
 GO_VERSION  := $(shell go version | awk '{ print $$3 }')
 
 LDFLAGS := -w \
 	-X main.BuildDate=${BUILD_DATE} \
 	-X main.Commit=${GIT_COMMIT} \
-	-X main.Tag=${GIT_TAG} \
+	-X main.Branch=${GIT_BRANCH} \
 	-X main.GoVersion=${GO_VERSION} \
 	-X main.Version=${BIN_VERSION}
 
