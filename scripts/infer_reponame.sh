@@ -3,7 +3,7 @@
 # exit on first error
 set -e
 
-APPNAME="webapp"
+APPNAME="k8s-elector"
 
 Usage() {
   echo "Usage: ${0} [-a AUTHOR] [-b BRANCH]"
