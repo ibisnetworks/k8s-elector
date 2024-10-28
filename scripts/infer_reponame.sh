@@ -19,7 +19,7 @@ UserToNamespaceMap() {
   case ${1} in
     "GrantChina"         ) echo "grant";;
     "jeffreyt"           ) echo "jeff";;
-    "mmadsen"|"madsenibis") echo "mark";;
+    "mmadsen"|"madsenwattiq") echo "mark";;
     "rbk1234"|"robkiessling") echo "robbie";;
     "rapkat10"           ) echo "rapkat";;
     *) echo "Unknown user ${1}" 1>&2; exit 1;;
