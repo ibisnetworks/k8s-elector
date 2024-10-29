@@ -40,7 +40,7 @@ steps:
       - GO_VERSION=${{GO_VERSION}}
       - BUILD_DATE=${{BUILD_DATE}}
       - VERSION=${{VERSION}}
-      - GIT_COMMIT=${{GIT_COMMIT}}
+      - GIT_COMMIT=${{CF_SHORT_REVISION}}
       - GIT_BRANCH=${{CF_BRANCH_TAG_NORMALIZED}}
     tag: ${{IMAGE_TAG}}
   push_to_ecr:
