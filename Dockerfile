@@ -32,6 +32,6 @@ RUN go build -a -installsuffix cgo -ldflags "-w -X main.Version=${VERSION} -X ma
 
 FROM scratch
 WORKDIR /app
-COPY --from=builder ./elector ./elector
+COPY --from=builder /app/elector ./elector
 
 CMD ["./elector"]
