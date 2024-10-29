@@ -34,4 +34,4 @@ FROM scratch
 WORKDIR /app
 COPY --from=builder /app/elector ./elector
 
-CMD ["./elector"]
+ENTRYPOINT ["./elector"]
