@@ -4,8 +4,8 @@ go 1.22
 
 require (
 	github.com/stretchr/testify v1.4.0
-	k8s.io/apimachinery v0.17.9
-	k8s.io/client-go v0.17.6
+	k8s.io/apimachinery v0.17.16
+	k8s.io/client-go v0.17.16
 	k8s.io/klog v1.0.0
 )
 
@@ -31,7 +31,7 @@ require (
 	google.golang.org/appengine v1.5.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
-	k8s.io/api v0.17.6 // indirect
+	k8s.io/api v0.17.16 // indirect
 	k8s.io/utils v0.0.0-20200124190032-861946025e34 // indirect
 	sigs.k8s.io/yaml v1.1.0 // indirect
 )
